@@ -1,0 +1,22 @@
+<div>
+    <p>{{ board.turn == 0 ? "White" : "Black" }}</p>
+    <p>{{   board.isInCheck(0) ? "White in Check" : ""}}</p>
+    <p>{{   board.isInCheck(1) ? "Black in Check" : ""}}</p>
+    <!-- board.tiles.reverse() doesnt work, first row fucks up -->
+    @for (row of board.tiles.slice().reverse(); track $index) {
+    <div class="row">
+        
+        @for (tile of row; track $index) {
+        <div 
+            class="tile {{ tile.getLightDarkCSS() }} {{ tile == selectedTile ? 'tile-selected' : '' }} {{ selectedPieceAvailableSquares.includes(tile) ? 'tile-move-available' : '' }}"
+            (click)="leftClick($event, tile)"
+            (contextmenu)="rightClick($event)"
+            
+        >
+        <img class="img-fluid" src="{{tile.piece?.getAssetPath()}}" />
+        </div>
+        }
+    </div>
+    }
+
+</div>

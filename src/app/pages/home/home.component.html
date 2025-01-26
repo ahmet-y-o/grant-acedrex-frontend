@@ -1,0 +1,14 @@
+<h1>Home Page</h1>
+
+<ul>
+@for (roomId of rooms; track $index) {
+    <li>
+        {{roomId}}
+        <button (click)="handleJoin(roomId)">Join</button>
+    </li>
+}
+</ul>
+
+
+<button (click)="handleCreateRoom()">Create Room</button>
+<button (click)="handleHotSeat()">Hot Seat Room</button>
