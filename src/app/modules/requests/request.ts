@@ -16,12 +16,15 @@ export const getRoomsList = async () => {
 
 export const createRoom = async () => {
     return fetch(BASEURL + "create-room", {
-        headers: []
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
     })
         .then(req => req.json())
         .then(json => {
-            // TODO: delete, only for debug
-            console.log(json)
             return json.roomId
         })
         .catch(err => console.error("error when creating room list:\n", err))

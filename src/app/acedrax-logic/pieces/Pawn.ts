@@ -1,8 +1,11 @@
 import { Board } from "../Board";
-import { Color, Tile } from "../models";
+import { Color, PieceType, Tile } from "../models";
 import { Piece } from "./BasePiece";
 
 export class Pawn extends Piece {
+    public override getPieceType(): PieceType {
+        return PieceType.Pawn
+    }
     public override getAssetPath(): string {
         return this.color == Color.White ? "assets/Chess_plt26.svg" : "assets/Chess_pdt26.svg"
     }

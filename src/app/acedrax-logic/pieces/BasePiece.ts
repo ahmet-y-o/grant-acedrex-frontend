@@ -1,5 +1,5 @@
 import { Board } from "../Board";
-import { Color, Tile } from "../models";
+import { Color, PieceType, Tile } from "../models";
 import { Pawn } from "./Pawn";
 
 export abstract class Piece {
@@ -15,5 +15,6 @@ export abstract class Piece {
 
     public abstract getAvailableMoves(board: Board): Tile[];
     public abstract getAssetPath(): string;
+    public abstract getPieceType(): PieceType;
 
 }

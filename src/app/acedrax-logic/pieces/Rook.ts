@@ -1,8 +1,11 @@
 import { Board } from "../Board";
-import { Color, Tile } from "../models";
+import { Color, PieceType, Tile } from "../models";
 import { Piece } from "./BasePiece";
 
 export class Rook extends Piece {
+    public override getPieceType(): PieceType {
+        return PieceType.Rook
+    }
     public override getAssetPath(): string {
         return this.color == Color.White ? "assets/Chess_rlt26.svg" : "assets/Chess_rdt26.svg"
     }

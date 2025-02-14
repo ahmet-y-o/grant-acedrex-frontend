@@ -1,4 +1,4 @@
-import { Color, Tile } from "./models";
+import { Color, PieceType, Tile } from "./models";
 import { Aanca } from "./pieces/Aanca";
 import { Crocodile } from "./pieces/Crocodile";
 import { Giraffe } from "./pieces/Giraffe";
@@ -62,22 +62,17 @@ export class Board {
     }
 
     public isInCheck(color: Color): boolean {
-        let kingTile: Tile;
 
-        for (let i = 0; i < this._SIZE; i++) {
-            for (let j = 0; j < this._SIZE; j++) {
-                if (this.tiles[i][j].piece instanceof King && this.tiles[i][j].piece!.color == color) {
-                    kingTile = this.tiles[i][j]
-                }
-            }
-        }
+        const kingTile = this.tiles
+            .flat(1) // convert to 1d array
+            .find(tile => tile.piece?.getPieceType() == PieceType.King && tile.piece!.color == color)
 
         const toReturn: boolean = this.tiles
             .flat(1) // convert to 1d array
             .filter(tile => tile.piece && tile.piece.color !== color) //  get opposing color pieces
             .reduce((acc: boolean, tile: Tile) => {
                 const moves = tile.piece!.getAvailableMoves(this)
-                if (moves.includes(kingTile)) {
+                if (moves.includes(kingTile!)) {
                     return true || acc
                 }
                 return false || acc
@@ -137,7 +132,6 @@ export class Board {
         // the pawn can only promote to their first rank type piece
         // i.e. a column pawn only can become rook
         // g column pawn becomes aanca (it doesn't become another king)
-
 
         if (start.piece instanceof Aanca) {
             end.newAanca(start.piece.color)

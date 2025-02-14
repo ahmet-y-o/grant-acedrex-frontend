@@ -25,6 +25,10 @@
     width: 100%;
 }
 
+.tile-move-from, .tile-move-to {
+    background-color: rgb(209, 250, 146);
+}
+
 .tile-selected {
     background-color: purple;
 }

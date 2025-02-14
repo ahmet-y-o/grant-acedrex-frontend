@@ -13,7 +13,19 @@ export enum Color {
     Black
 }
 
+export class TileCoords {
+    public x: number
+    public y: number
+
+    public constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+
 export class Tile {
+
     public x: number
     public y: number
     public piece: (Piece | null)
@@ -70,11 +82,29 @@ export class Tile {
         return this.isLight ? "tile-light" : "tile-dark";
     }
 
-    
+    public tileCoords(): TileCoords {
+        return new TileCoords(this.x, this.y)
+    }
+
+    public isCoordsSameAs(tile: Tile | null): boolean {
+        if (tile == null) return false
+        return this.x == tile.x && this.y == tile.y;
+    }
+
+    public CoordString(): string {
+        return String.fromCharCode(this.x + 97) + String(this.y + 1)
+    }
 
 }
 
-
-export function getAssetPath(piece: Piece) {
-
+// enum type for all objects
+export enum PieceType {
+    Pawn,
+    Rook,
+    Unicornio,
+    Lion,
+    Giraffe,
+    Crocodile,
+    Aanca,
+    King
 }

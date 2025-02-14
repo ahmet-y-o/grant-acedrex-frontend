@@ -22,20 +22,25 @@ export class HomeComponent {
   }
 
   public async handleCreateRoom() {
-    console.log("Create room button")
     // make a request to backend server and create a room
     // get the room id and redirect to the url
     const roomId = await createRoom()
-    this.router.navigate([roomId])
+    this.rooms = await getRoomsList();
+    // this.router.navigate([roomId])
   }
 
   public async handleJoin(roomId: string) {
     console.log("Join button ", roomId)
+    this.router.navigate([roomId])
   }
 
   public async handleHotSeat() {
     console.log("Hot Seat button")
     this.router.navigate(['hotseat'])
+  }
+
+  public async handleRefreshList() {
+    this.rooms = await getRoomsList();
   }
 
 

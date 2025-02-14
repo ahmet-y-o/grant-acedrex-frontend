@@ -1,8 +1,12 @@
 import { Board } from "../Board";
-import { Color, Tile } from "../models";
+import { Color, PieceType, Tile } from "../models";
 import { Piece } from "./BasePiece";
 
+// TODO: fix king can jump over pieces
 export class King extends Piece {
+    public override getPieceType(): PieceType {
+        return PieceType.King
+    }
     public override getAssetPath(): string {
         return this.color == Color.White ? "assets/Chess_klt26.svg" : "assets/Chess_kdt26.svg"
     }

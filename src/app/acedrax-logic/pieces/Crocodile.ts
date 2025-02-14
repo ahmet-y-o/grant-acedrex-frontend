@@ -1,8 +1,11 @@
 import { Board } from "../Board";
-import { Color, Tile } from "../models";
+import { Color, PieceType, Tile } from "../models";
 import { Piece } from "./BasePiece";
 
 export class Crocodile extends Piece {
+    public override getPieceType(): PieceType {
+        return PieceType.Crocodile
+    }
     public override getAssetPath(): string {
         return this.color == Color.White ? "assets/Chess_blt26.svg" : "assets/Chess_bdt26.svg"
     }
