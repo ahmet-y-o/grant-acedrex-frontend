@@ -1,10 +1,17 @@
+$tile-size: 40px;
+
 .row {
     display: flex;
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Standard syntax */
 }
 
 .tile {
-    width: 60px;
-    height: 60px;
+    width: $tile-size;
+    height: $tile-size;
     aspect-ratio: 1;
     display: inline-block;
     border: 1px black solid;
@@ -23,6 +30,10 @@
 
 .img-fluid {
     width: 100%;
+}
+
+.piece {
+    cursor: grab;
 }
 
 .tile-move-from, .tile-move-to {

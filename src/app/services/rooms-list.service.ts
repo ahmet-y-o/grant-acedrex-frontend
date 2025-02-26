@@ -13,6 +13,10 @@ export class RoomsListService {
   getRoomsList(): Observable<any> {
     return this.httpClient.get("http://localhost:8080/")
   }
+
+  isRoomFull(roomId: string): Observable<any> {
+    return this.httpClient.get("http://localhost:8080/isFull/" + roomId)
+  }
   
 
 }

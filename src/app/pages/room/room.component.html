@@ -1,18 +1,15 @@
-
 <div class="flex flex-row">
 
-    <p>Side: {{this.getSide()}}</p>
-
     <!-- Start Chatbox -->
-    <div class="mx-4">
-        <ul>            
+    <div class="mx-4 border-black border-1 rounded flex flex-col justify-between overflow-hidden w-72">
+        <div class="min-h-0 flex flex-col">            
             @for (message of this.gameService.messages() | async; track $index) {
-            <li>
+            <div class="text-wrap grow-0 shrink-0">
                 {{message}}
-            </li>
+            </div>
             }
 
-        </ul>
+        </div>
         <form (ngSubmit)="chatSubmit()">
             <input 
                 class="background-gray-100 border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
@@ -24,12 +21,11 @@
     </div>
     <!-- End Chatbox -->
 
+    <!-- Start Board-->
     <app-board
-        [board]="board!"
-        [side]="side!"
-        (afterMove)="onMove($event)"
         class="mx-4"
     />
+    <!-- End Board-->
 
     
 

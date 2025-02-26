@@ -13,10 +13,26 @@
     </div>
 
 
-    <button (click)="handleCreateRoom()"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:cursor-pointer me-3">Create Room</button>
+    <button (click)="onlineRoomDialog()"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:cursor-pointer me-3">Create
+        Room</button>
+
+
+
     <button (click)="handleHotSeat()"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:cursor-pointer me-3">Hot Seat Room</button>
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:cursor-pointer me-3">Hot Seat
+        Room</button>
     <button (click)="handleRefreshList()"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:cursor-pointer me-3"> Refresh Room List</button>
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:cursor-pointer me-3"> Refresh
+        Room List</button>
+    @if (showDialog) {
+    <div class="flex flex-row m-2">
+        <button class="bg-white hover:bg-slate-200 text-black font-bold py-2 px-4 rounded hover:cursor-pointer m-2"
+            (click)="handleCreateRoom('white')">Play
+            as White</button>
+        <button class="bg-black hover:bg-slate-600 text-white font-bold py-2 px-4 rounded hover:cursor-pointer m-2"
+            (click)="handleCreateRoom('black')">Play
+            as Black</button>
+    </div>
+    }
 </div>

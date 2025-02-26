@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { createRoom, getRoomsList } from '../../modules/requests/request';
+import { createRoom, getRoomsList, isRoomFull } from '../../modules/requests/request';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -13,6 +13,7 @@ import { HttpClient } from '@angular/common/http';
 export class HomeComponent {
 
   rooms!: any;
+  showDialog = false
 
   constructor(private router: Router, private http: HttpClient) {
   }
@@ -21,21 +22,39 @@ export class HomeComponent {
     this.rooms = await getRoomsList();
   }
 
-  public async handleCreateRoom() {
-    // make a request to backend server and create a room
-    // get the room id and redirect to the url
-    const roomId = await createRoom()
-    this.rooms = await getRoomsList();
-    // this.router.navigate([roomId])
+  public async onlineRoomDialog() {
+    this.showDialog = !this.showDialog
   }
 
+  public async handleCreateRoom(side: string) {
+    createRoom(side)
+      .then(roomId => {
+        this.router.navigate([roomId], {
+          queryParams: {
+            s: side
+          }
+        })
+      })
+      .catch(err => console.error("error when creating room:\n", err))
+  }
+
+
+
   public async handleJoin(roomId: string) {
-    console.log("Join button ", roomId)
-    this.router.navigate([roomId])
+    isRoomFull(roomId)
+      .then(res => {
+        if (res.status == 200) {
+          this.router.navigate([roomId])
+        } else {
+          alert("Room is full")
+        }
+        
+      })
+      .catch(err => console.error("error when checking if room is full:\n", err))
+    // check if the game is full
   }
 
   public async handleHotSeat() {
-    console.log("Hot Seat button")
     this.router.navigate(['hotseat'])
   }
 

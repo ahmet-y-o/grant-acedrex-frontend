@@ -15,9 +15,7 @@ import { Color, Tile } from '../../acedrax-logic/models';
   providers: [OnlineGameService]
 })
 export class RoomComponent {
-  board: Board | undefined;
   chatInput: string = "";
-  side: Color | undefined
   constructor(
     public gameService: OnlineGameService,
     private route: ActivatedRoute
@@ -25,15 +23,7 @@ export class RoomComponent {
 
   async ngOnInit() {
     // connect to websocket
-    this.gameService.connect(this.route.snapshot.params['id'])
-      .then(() => {
-        this.side = this.gameService.getSide();
-        console.log("componenet assigns side", new Date())
-        this.board = this.gameService.getBoard();
-      })
-      .catch((err) => {
-        console.error(err)
-      })
+    this.gameService.connect(this.route.snapshot.params['id'], this.route.snapshot.queryParams["s"])
   }
 
 
@@ -47,16 +37,8 @@ export class RoomComponent {
   }
 
   chatSubmit() {
-    console.log(this.board!.tiles)
     this.gameService.chat(this.chatInput)
-    this.side = this.gameService.getSide();
     this.chatInput = ""
-  }
-
-  getSide(): string {
-    if (this.side == Color.White) return "white"
-    else if (this.side == Color.Black) return "black"
-    else return "undefined"
   }
 
 }
