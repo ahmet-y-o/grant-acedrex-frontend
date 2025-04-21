@@ -8,9 +8,9 @@
     @for (row of (side == 0 ? (gameService.getTiles() | async)!.slice().reverse() : (gameService.getTiles() | async)!.slice()) ; track $index) {
     <div class="row">
         @for (tile of row; track $index) {
-        <div class="tile {{ tile.isCoordsSameAs(lastMoveFrom) ? 'tile-move-from' : '' }} {{ tile.isCoordsSameAs(lastMoveTo) ? 'tile-move-to' : '' }}  {{ tile.getLightDarkCSS() }} {{ tile == selectedTile ? 'tile-selected' : '' }} {{ selectedPieceAvailableSquares.includes(tile) ? 'tile-move-available' : '' }}"
+        <div class="tile {{ tile.isCoordsSameAs(lastMoveFrom) ? 'tile-move-from' : '' }} {{ tile.isCoordsSameAs(lastMoveTo) ? 'tile-move-to' : '' }}  {{ tile.getLightDarkCSS() }} {{ tile == selectedTile ? 'tile-selected' : '' }} {{ selectedPieceAvailableSquares.includes(tile) ? 'tile-move-available' : '' }} {{ markedTiles.includes(tile) ? 'tile-marked' : '' }}"
             (click)="leftClick($event, tile)"
-            (contextmenu)="rightClick($event)"
+            (contextmenu)="rightClick($event, tile)"
             (dragover)="$event.preventDefault()"
             (drop)="dropToTile($event, tile)"
             >
@@ -19,7 +19,6 @@
                 (dragstart)="dragStart($event, tile)" 
                 />
             }
-            
         </div>
         }
     </div>

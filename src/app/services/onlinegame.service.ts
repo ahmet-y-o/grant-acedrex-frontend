@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, scan, Subject } from 'rxjs';
-import { WebSocketSubject } from 'rxjs/webSocket';
 import { Color, Tile } from '../acedrax-logic/models';
 import { Board } from '../acedrax-logic/Board';
+import { BASEURL } from '../modules/requests/request';
+
 
 @Injectable()
 export class OnlineGameService {
@@ -12,9 +13,9 @@ export class OnlineGameService {
   private lastMoveFrom$: Subject<Tile | null> = new Subject<Tile | null>();
   private lastMoveTo$: Subject<Tile | null> = new Subject<Tile | null>();
   private connection: WebSocket | null = null
-  private messagesSubject: Subject<string> = new Subject<string>();
+  private messagesSubject: Subject<Message> = new Subject<Message>();
   private movesSubject: Subject<string> = new Subject<string>();
-  private messages$: Observable<string[]>;
+  private messages$: Observable<Message[]>;
   private moves$: Observable<string[]>;
   private side$: Subject<Color>;
   private turn$: Subject<Color>;
@@ -23,7 +24,7 @@ export class OnlineGameService {
 
   constructor() {
     this.messages$ = this.messagesSubject.asObservable().pipe(
-      scan((acc: string[], msg: string) => [...acc, msg], []) 
+      scan((acc: Message[], msg: Message) => [...acc, msg], []) 
     );
     this.moves$ = this.movesSubject.asObservable().pipe(
       scan((acc: string[], msg: string) => [...acc, msg], []) 
@@ -34,15 +35,18 @@ export class OnlineGameService {
     this.side$ = new Subject<Color>();
     this.turn$ = new Subject<Color>();
   }
+  
 
   async connect(roomId: string, side: string) {
-    this.connection = new WebSocket("ws://localhost:8080/join-room/" + roomId + "?s=" + side);
+    this.connection = new WebSocket(BASEURL + "join-room/" + roomId + "?s=" + side);
     this.connection.onmessage = (event) => {
       const eventJson = JSON.parse(event.data)
-      console.log(event.data)
       if (eventJson.type == "chat") {
-
-        this.messagesSubject.next(eventJson.data); // Push incoming messages to the Observable stream  
+        const message: Message = {
+          from: eventJson.from,
+          message: eventJson.data
+        }
+        this.messagesSubject.next(message); // Push incoming messages to the Observable stream  
       } else if (eventJson.type == "move") {
         this.sound.play()
         this.movesSubject.next(eventJson.data);
@@ -55,22 +59,53 @@ export class OnlineGameService {
         this.lastMoveTo$.next(to)
       } else if (eventJson.type == "side") {
         // should use signals?
-        console.log("service recives side", new Date())
         this.side$.next(eventJson.data == "White" ? Color.White : Color.Black)
       } else if (eventJson.type == "error") {
+        console.log(eventJson)
+      } else if (eventJson.type == "debug") {
+        //console.log(eventJson.data)
+        //console.log(this.board.allAvailbleMoves())
+
+        let server_data = JSON.parse(eventJson.data)
+        let client_data = JSON.parse(this.board.allAvailbleMoves())
+        let clientKeys = []
+        let serverKeys = []
+        let all_keys = []
+        for (let key in server_data) {
+          all_keys.push(key)
+          serverKeys.push(key)
+        }
+        for (let key in client_data) {
+          all_keys.push(key)
+          clientKeys.push(key)
+        }
+        serverKeys.sort();
+        clientKeys.sort();
+        // console.log(serverKeys, clientKeys)
         
+        for (let key of all_keys) {
+          let server_moves: [] = server_data[key]
+          let client_moves: [] = client_data[key]
+          server_moves.sort();
+          client_moves.sort();
+          if (server_moves.toString() != client_moves.toString()) {
+            console.log(key, client_moves, server_moves)
+          }
+        }
+
       }
     };
 
     // Handle WebSocket close or errors
     this.connection.onclose = () => {
-      console.log('WebSocket connection closed');
+      // retry connection?
+      this.messagesSubject.next({from: "client", message: "Connection closed"});
       this.messagesSubject.complete();
     };
 
     this.connection.onerror = (error) => {
+      this.messagesSubject.next({from: "client", message: "Connection error"});
       console.error('WebSocket error:', error);
-      this.messagesSubject.error(error);
     };
 
   }
@@ -80,8 +115,6 @@ export class OnlineGameService {
   }
 
   reconnect() {
-    console.log(this.side$)
-    console.log("reconnect")
   }
 
   sendMove(move: string) {
@@ -105,7 +138,7 @@ export class OnlineGameService {
     }))
   }
 
-  public messages(): Observable<string[]> {
+  public messages(): Observable<Message[]> {
     return this.messages$;
   }
 
@@ -171,7 +204,7 @@ export class OnlineGameService {
   }
 }
 
-type Message = {
-  from: Color | "server",
+interface Message {
+  from: string,
   message: string
 }

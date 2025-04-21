@@ -95,8 +95,10 @@ export class Board {
     }
 
     public isMoveLegal(start: Tile, end: Tile): boolean {
+
         // copy the end piece
         const endPiece = end.piece;
+        
 
         // check if the move is legal
         let toReturn : boolean = false;
@@ -119,6 +121,11 @@ export class Board {
             return
         }
         this.unrestrictedMove(start, end)
+        const isKing = start.piece instanceof King
+        if (isKing) {
+            (start.piece as King).hasMoved = true
+        }
+
         this.turn = this.turn == Color.White ? Color.Black : Color.White
     }
 
@@ -144,9 +151,6 @@ export class Board {
             start.piece = null
         } else if (start.piece instanceof King) {
             end.newKing(start.piece.color)
-            if (end.piece instanceof King) {
-                end.piece.hasMoved = true;
-            }
             start.piece = null
         } else if (start.piece instanceof Lion) {
             end.newLion(start.piece.color)
@@ -199,5 +203,27 @@ export class Board {
             start.piece = null
         }
     }
+
+    public allAvailbleMoves() {
+        let moves = {}
+        for (let i = 0; i < this._SIZE; i++) {
+            for (let j = 0; j < this._SIZE; j++) {
+                const t = this.tiles[i][j]
+                if (t.piece != null) {
+                    const movesForPiece = this.getLegalMovesForPiece(t)
+                    for (let k = 0; k < movesForPiece.length; k++) {
+                        
+                        //@ts-ignore
+                        moves[this.tileToNotation(t)] = movesForPiece.map(tile => this.tileToNotation(tile))
+                    }
+                }
+            }
+        }
+        return JSON.stringify(moves)
+    }
+
+    private tileToNotation(tile: Tile): string {
+        return String.fromCharCode(tile.x + 'a'.charCodeAt(0)) + (tile.y + 1);
+      }
 
 }

@@ -2,10 +2,9 @@ import { Component, SkipSelf } from '@angular/core';
 import { Color, Tile } from '../../acedrax-logic/models';
 import { OnlineGameService } from '../../services/onlinegame.service';
 import { AsyncPipe } from '@angular/common';
-import { combineLatest } from 'rxjs';
-  // TODO: add last move indicators
+
+
   // TODO: add check indicator
-  // TODO: add sound effects
   // TODO: add righ click drag arrows and circles
 @Component({
   selector: 'app-board',
@@ -22,6 +21,7 @@ export class BoardComponent {
   protected selectedPieceAvailableSquares: Tile[] = [];
   protected lastMoveFrom: Tile | null = null;
   protected lastMoveTo: Tile | null = null;
+  protected markedTiles: Tile[] = [];
 
   constructor(@SkipSelf() public gameService: OnlineGameService) {
     this.gameService.getSide().subscribe(side => this.side = side);
@@ -31,6 +31,7 @@ export class BoardComponent {
   }
 
   public dragStart(e: DragEvent, tile: any) {
+    this.markedTiles = []
     if (tile.piece == null) {
       return
     } else if (tile.piece.color != this.side) {
@@ -57,9 +58,9 @@ export class BoardComponent {
 
   public leftClick(e: MouseEvent, tile: any) {
 
-    // TODO: fix when clicking and canceling on king, king counts as moved
     e.preventDefault();    
-    
+    this.markedTiles = []
+
     // clicked on already selected tile
     if (tile == this.selectedTile) {
       this.selectedTile = null
@@ -105,8 +106,12 @@ export class BoardComponent {
     }
       
   }
-  public rightClick(e: MouseEvent) {
+  public rightClick(e: MouseEvent, tile: Tile) {
     e.preventDefault();
-    
+    if (this.markedTiles.includes(tile)) {
+      this.markedTiles.splice(this.markedTiles.indexOf(tile), 1);
+      return
+    }
+    this.markedTiles.push(tile);
   }
 }

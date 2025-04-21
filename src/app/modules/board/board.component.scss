@@ -1,4 +1,4 @@
-$tile-size: 40px;
+$tile-size: 70px;
 
 .row {
     display: flex;
@@ -24,8 +24,16 @@ $tile-size: 40px;
     background-color: antiquewhite;
 }
 
+.tile-light.tile-marked {
+    background-color: rgb(250, 177, 169);
+}
+
 .tile-dark {
     background-color: darkgrey;
+}
+
+.tile-dark.tile-marked {
+    background-color: rgb(250, 137, 124);
 }
 
 .img-fluid {

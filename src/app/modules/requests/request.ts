@@ -1,5 +1,6 @@
 
-const BASEURL = "http://localhost:8080/"
+const dev = true
+export const BASEURL = dev ? "http://localhost:8080/" : "/api/"
 
 export const getRoomsList = async () => {
     return fetch(BASEURL, {
@@ -7,8 +8,6 @@ export const getRoomsList = async () => {
     })  
         .then(req => req.json())
         .then(json => {
-            // TODO: delete, only for debug
-            console.log(json)
             return json
         })
         .catch(err => console.error("error when getting rooms list:\n", err))

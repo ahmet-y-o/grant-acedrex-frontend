@@ -32,7 +32,6 @@ export class RoomComponent {
   }
 
   onMove(event: {from: Tile, to: Tile}) {
-    console.log("onMove from parent", event)
     this.gameService.sendMove(event.from.CoordString() + event.to.CoordString())
   }
 

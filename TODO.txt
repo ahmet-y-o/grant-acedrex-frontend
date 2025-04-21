@@ -1,1 +1,5 @@
-1. board should be only gui, should emit attemptedMove event
+1. reconnection logic
+2. have rooms ttl
+3. on reconnection send GAFEN, make board from GAFEN
+4. implement game end logic
+5. fix isLegal logic // also maybe make the moves return a state?
