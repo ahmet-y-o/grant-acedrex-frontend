@@ -25,6 +25,7 @@ Grant acedrex is a historical chess variant with fairy pieces.
 Project runs on port 4200 by default.
 
 3. To build the project:
+
     ```
     npm run build
     ```
